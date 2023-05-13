@@ -1,0 +1,19 @@
+<!-- login.html -->
+
+{% extends "index.html" %} {% block content %}
+<div class="content">
+	<h1>This is Login</h1>
+	<br>
+	 {% if error %}
+	<p>
+		{{ error }}
+	</p>
+	 {% endif %}
+	<form class="user" method="POST" action="{{ url_for('main.login') }}">
+        <label for="username"></label><input type="text" id="username" name="username" placeholder="Username"><br>
+        <label for="password"></label><input type="password" id="password" name="password" placeholder="Password"><br>
+		<br>
+		<input type="submit" value="Submit">
+	</form>
+</div>
+{% endblock %}

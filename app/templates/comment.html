@@ -1,0 +1,39 @@
+<!-- comment.html -->
+
+{% extends "index.html" %} {% block content %}
+<div class="content">
+	<h1>This is Comment</h1>
+	<br>
+	 {% if is_logged_in() %}
+	<div class="comment-add">
+		<form action="/add_comment" method="post">
+			<label>
+			<input type="text" name="comment" placeholder="Write your comment here!" required>
+			</label>
+			<input type="submit" value="Add Comment">
+		</form>
+	</div>
+	 {% endif %}
+	<ul class="comment">
+		<br>
+		 {% for comment in get_recent_comments() %}
+		<li>
+		<div class="comment-info">
+			<span class="id">No. {{ comment.id }} - {{ comment.author }}</span>
+			<span class="author">{{ comment.date.strftime('%y/%m/%d %H:%M') }}</span>
+		</div>
+		<br>
+		<p>
+			 {{ comment.text }}
+		</p>
+		<br>
+		 {% if comment.user_id == get_current_user().id or get_current_user().is_admin %}
+		<form action="/delete_comment/{{ comment.id }}" method="post">
+			<input type="submit" value="Delete">
+		</form>
+		 {% endif %} </li>
+		<br>
+		 {% endfor %}
+	</ul>
+</div>
+{% endblock %}

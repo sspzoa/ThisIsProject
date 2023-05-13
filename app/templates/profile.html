@@ -1,0 +1,28 @@
+<!-- profile.html -->
+
+{% extends "index.html" %} {% block content %}
+<div class="content">
+	<h1>This is {{ user.username }}'s Profile</h1>
+	<br>
+	<form class="user" method="POST" action="{{ url_for('main.profile') }}">
+        <input type="text" id="username" name="username" value="{{ user.username }}" disabled><br>
+        <input type="password" id="current-password" name="current-password" placeholder="Current Password"><br>
+        <input type="password" id="password" name="password" placeholder="New Password"><br>
+        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm New Password"><br>
+		<br>
+		 {% if error %}
+		<p class="error">
+			{{ error }}
+		</p>
+		 {% endif %} {% if success %}
+		<p class="success">
+			{{ success }}
+		</p>
+		 {% endif %}
+        <input type="submit" value="Modify Password">
+	</form>
+	<form class="user" method="POST" action="/delete_account">
+		<input type="submit" value="Delete Account" onclick="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
+	</form>
+</div>
+{% endblock %}
