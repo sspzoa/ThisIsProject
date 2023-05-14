@@ -9,7 +9,7 @@
 		{{ error }}
 	</p>
 	 {% endif %}
-	<form class="user" method="POST" action="{{ url_for('main.login') }}">
+	<form class="user" method="POST" action="{{ url_for('auth.login') }}">
         <label for="username"></label><input type="text" id="username" name="username" placeholder="Username"><br>
         <label for="password"></label><input type="password" id="password" name="password" placeholder="Password"><br>
 		<br>

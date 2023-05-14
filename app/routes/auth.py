@@ -1,14 +1,13 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
-from .utilities import is_logged_in, get_current_user, get_recent_comments
-from .models import User, Comment
-from . import db
+from ..utilities import is_logged_in, get_current_user, get_recent_comments
+from ..models import User
+from .. import db
 from werkzeug.security import generate_password_hash, check_password_hash
-from markupsafe import escape
 import re
 
-main_blueprint = Blueprint('main', __name__)
+auth_blueprint = Blueprint('auth', __name__)
 
-@main_blueprint.context_processor
+@auth_blueprint.context_processor
 def utility_functions():
     return {
         'is_logged_in': is_logged_in,
@@ -16,12 +15,12 @@ def utility_functions():
         'get_recent_comments': get_recent_comments
     }
 
-@main_blueprint.route('/')
+@auth_blueprint.route('/')
 def index():
     return render_template('index.html')
 
 
-@main_blueprint.route('/login', methods=['GET', 'POST'])
+@auth_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
@@ -34,7 +33,7 @@ def login():
             if user.username == "admin":
                 user.is_admin = True
                 db.session.commit()
-            return redirect(url_for('main.index'))
+            return redirect(url_for('auth.index'))
         else:
             error_msg = 'Invalid username or password. Please try again.'
             return render_template('login.html', error=error_msg)
@@ -42,7 +41,7 @@ def login():
     return render_template('login.html')
 
 
-@main_blueprint.route('/register', methods=['GET', 'POST'])
+@auth_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form['username']
@@ -68,7 +67,7 @@ def register():
         db.session.add(user)
         try:
             db.session.commit()
-            return redirect(url_for('main.login'))
+            return redirect(url_for('auth.login'))
         except Exception as e:
             db.session.rollback()
             error_msg = 'An error occurred while registering. Please try again.'
@@ -76,16 +75,16 @@ def register():
     return render_template('register.html')
 
 
-@main_blueprint.route('/logout')
+@auth_blueprint.route('/logout')
 def logout():
     session.pop('user_id', None)
-    return redirect(url_for('main.index'))
+    return redirect(url_for('auth.index'))
 
 
-@main_blueprint.route('/profile', methods=['GET', 'POST'])
+@auth_blueprint.route('/profile', methods=['GET', 'POST'])
 def profile():
     if not is_logged_in():
-        return redirect(url_for('main.login'))
+        return redirect(url_for('auth.login'))
 
     user = get_current_user()
 
@@ -110,10 +109,10 @@ def profile():
     return render_template('profile.html', user=user)
 
 
-@main_blueprint.route('/delete_account', methods=['POST'])
+@auth_blueprint.route('/delete_account', methods=['POST'])
 def delete_account():
     if not is_logged_in():
-        return redirect(url_for('main.login'))
+        return redirect(url_for('auth.login'))
 
     user = get_current_user()
 
@@ -122,45 +121,4 @@ def delete_account():
 
     session.pop('user_id', None)
 
-    return redirect(url_for('main.index'))
-
-@main_blueprint.route('/comment')
-def comment():
-    return render_template('comment.html')
-
-
-
-@main_blueprint.route('/add_comment', methods=['POST'])
-def add_comment():
-    if not is_logged_in():
-        return redirect(url_for('main.login'))
-
-    user = get_current_user()
-    comment_text = request.form['comment']
-
-    # Sanitize comment text to prevent XSS attacks
-    sanitized_comment_text = escape(comment_text)
-
-    new_comment = Comment(author=user.username, text=sanitized_comment_text, user_id=user.id)
-    db.session.add(new_comment)
-    db.session.commit()
-
-    return redirect(url_for('main.comment'))
-
-
-@main_blueprint.route('/delete_comment/<int:comment_id>', methods=['POST'])
-def delete_comment(comment_id):
-    if not is_logged_in():
-        return redirect(url_for('login'))
-
-    comment = Comment.query.get(comment_id)
-
-    if comment:
-        if session.get('user_id') == comment.user_id:
-            db.session.delete(comment)
-            db.session.commit()
-        if get_current_user().is_admin:
-            db.session.delete(comment)
-            db.session.commit()
-
-    return redirect(url_for('main.comment'))
+    return redirect(url_for('auth.index'))

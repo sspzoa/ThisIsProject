@@ -4,7 +4,7 @@
 <div class="content">
 	<h1>This is {{ user.username }}'s Profile</h1>
 	<br>
-	<form class="user" method="POST" action="{{ url_for('main.profile') }}">
+	<form class="user" method="POST" action="{{ url_for('auth.profile') }}">
         <input type="text" id="username" name="username" value="{{ user.username }}" disabled><br>
         <input type="password" id="current-password" name="current-password" placeholder="Current Password"><br>
         <input type="password" id="password" name="password" placeholder="New Password"><br>

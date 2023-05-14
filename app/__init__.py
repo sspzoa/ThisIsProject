@@ -12,7 +12,13 @@ def create_app():
     db.init_app(app)
     Migrate(app, db)
 
-    from .routes import main_blueprint
+    from .main import main_blueprint
     app.register_blueprint(main_blueprint)
+
+    from .routes.auth import auth_blueprint
+    app.register_blueprint(auth_blueprint)
+
+    from .routes.comment import comment_blueprint
+    app.register_blueprint(comment_blueprint)
 
     return app

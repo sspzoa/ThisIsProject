@@ -9,7 +9,7 @@
 		{{ error }}
 	</p>
 	 {% endif %}
-	<form class="user" method="POST" action="{{ url_for('main.register') }}">
+	<form class="user" method="POST" action="{{ url_for('auth.register') }}">
         <label for="username"></label><input type="text" id="username" name="username" placeholder="Username"><br>
         <label for="password"></label><input type="password" id="password" name="password" placeholder="Password"><br>
         <label for="confirm-password"></label><input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password"><br>
