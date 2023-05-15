@@ -1,0 +1,44 @@
+<!-- gpt.html -->
+{% extends 'index.html' %} {% block content %}
+<div class="content">
+	<h1>This is GPT</h1>
+	<br>
+	<div class="gpt">
+		<form id="gpt-form">
+			<input type="text" id="prompt" name="prompt" placeholder="Write your prompt here!" required>
+			<input type="submit" value="Submit">
+		</form>
+	</div>  
+	<br>
+	<div id="gpt-response" class="gpt-response">
+		<p id="response-text"></p>
+    <p id="loading-text" style="display:none;">Loading...</p>
+	</div>
+	<script>
+        document.getElementById('gpt-form').addEventListener('submit', async (event) => {
+          event.preventDefault();
+          const prompt = document.getElementById('prompt').value;
+          const loadingText = document.getElementById('loading-text');
+          const responseText = document.getElementById('response-text');
+    
+          loadingText.style.display = 'block';
+          responseText.textContent = '';
+    
+          const response = await fetch('/gpt/api', {
+            method: 'POST',
+            body: new FormData(event.target),
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest',
+            },
+          });
+          if (response.ok) {
+            const data = await response.json();
+            responseText.textContent = data.response;
+          } else {
+            responseText.textContent = 'Error: Unable to fetch response.';
+          }
+          loadingText.style.display = 'none';
+        });
+      </script>
+</div>
+{% endblock %}

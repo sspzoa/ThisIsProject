@@ -21,4 +21,7 @@ def create_app():
     from .routes.comment import comment_blueprint
     app.register_blueprint(comment_blueprint)
 
+    from .routes.gpt import gpt_blueprint
+    app.register_blueprint(gpt_blueprint)
+
     return app

@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
-from ..utilities import is_logged_in, get_current_user, get_recent_comments
+from ..utilities import is_logged_in, get_current_user
 from ..models import User
 from .. import db
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -11,8 +11,7 @@ auth_blueprint = Blueprint('auth', __name__)
 def utility_functions():
     return {
         'is_logged_in': is_logged_in,
-        'get_current_user': get_current_user,
-        'get_recent_comments': get_recent_comments
+        'get_current_user': get_current_user
     }
 
 @auth_blueprint.route('/')

@@ -14,6 +14,7 @@
 <ul class="nav-links">
 	<li><a href="/comment">Comment</a></li>
 	 {% if is_logged_in() %}
+	<li><a href="/gpt">GPT</a></li>
 	<li><a href="/profile">{{ get_current_user().username }}</a></li>
 	<li><a href="/logout">Logout</a></li>
 	 {% else %}
