@@ -1,3 +1,4 @@
+import os
 import openai
 from flask import Blueprint, render_template, redirect, url_for, request, jsonify
 from ..utilities import is_logged_in, get_current_user
@@ -22,7 +23,7 @@ def gpt_api():
     if not is_logged_in():
         return redirect(url_for('main.index'))
     prompt = request.form.get('prompt')
-    openai.api_key = "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"
+    openai.api_key = os.getenv('OPENAI_API_KEY')
     response = openai.Completion.create(
         engine="text-davinci-003",
         prompt=prompt,
